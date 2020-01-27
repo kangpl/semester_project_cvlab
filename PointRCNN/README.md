@@ -48,25 +48,6 @@ c. Build and install the `pointnet2_lib`, `iou3d`, `roipool3d` libraries by exec
 sh build_and_install.sh
 ```
 
-## Dataset preparation
-Please download the official [KITTI 3D object detection](http://www.cvlibs.net/datasets/kitti/eval_object.php?obj_benchmark=3d) dataset and organize the downloaded files as follows: 
-```
-PointRCNN
-├── data
-│   ├── KITTI
-│   │   ├── ImageSets
-│   │   ├── object
-│   │   │   ├──training
-│   │   │      ├──calib & velodyne & label_2 & image_2 & (optional: planes)
-│   │   │   ├──testing
-│   │   │      ├──calib & velodyne & image_2
-├── lib
-├── pointnet2_lib
-├── tools
-```
-Here the images are only used for visualization and the [road planes](https://drive.google.com/file/d/1d5mq0RXRnvHPVeKx6Q612z0YRO1t2wAp/view?usp=sharing) are optional for data augmentation in the training. 
-
-
 ## Pretrained model
 You could download the pretrained model(Car) of PointRCNN from [here(~15MB)](https://drive.google.com/file/d/1aapMXBkSn5c5hNTDdRNI74Ptxfny7PuC/view?usp=sharing), which is trained on the *train* split (3712 samples) and evaluated on the *val* split (3769 samples) and *test* split (7518 samples). The performance on validation set is as follows:
 ```
