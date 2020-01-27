@@ -44,6 +44,10 @@ sh build_and_install.sh
 ```
 
 ## PointRCNN (used as baseline)
+
+### Pretrained model
+![baseline_result](https://github.com/kangpl/semester_project_cvlab/images/baseline_result.png)
+
 ## PointRCNNV1 (add RGB/ add Mean and Covariance)
 ## PointRCNNV2 (add image features to rpn)
 ## PointRCNNV3 (add image features to rcnn)
