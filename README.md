@@ -20,7 +20,7 @@ Here the [road planes](https://drive.google.com/file/d/1d5mq0RXRnvHPVeKx6Q612z0Y
 All the codes are tested in the following environment:
 * Linux (tested on Ubuntu 18.04)
 * Python 3.6+
-* PyTorch 1.0
+* PyTorch 1.0+
 
 ### Install semester_project_lab 
 
