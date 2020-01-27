@@ -18,7 +18,7 @@ Here the images are only used for visualization and the [road planes](https://dr
 ## Installation
 ### Requirements
 All the codes are tested in the following environment:
-* Linux (tested on Ubuntu 14.04/16.04/18.04)
+* Linux (tested on Ubuntu 18.04)
 * Python 3.6+
 * PyTorch 1.0
 
