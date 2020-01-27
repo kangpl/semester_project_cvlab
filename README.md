@@ -50,10 +50,10 @@ Currently, the two stages of PointRCNN are trained separately. First we clarify 
 * **GT_AUG** put several new ground-truth boxes and their inside points from other scenes to the same locations of current training scene by randomly selecting non-overlapping boxes, and this augmentation is denoted as GT_AUG. 
 * **RCNN online** Train RCNN (2nd stage) network with fixed RPN (1st stage) network
 * **RCNN offline** After training the RPN, we save the RoIs and their features for the RCNN training.  
-So there are four train stragies:  
+So there are four train strategies:  
 (1) with GT_AUG and RCNN online  
 (2) with GT_AUG and RCNN offline  
-(3) without GT_AUG and RCNN online  
+(3) without GT_AUG and RCNN online (we use this one as our baseline)  
 (4) without GT_AUG and RCNN offline  
 
 #### with GT_AUG and RCNN online 
