@@ -40,6 +40,7 @@ pip install scikit-image pyyaml
 
 c. Build and install the `pointnet2_lib`, `iou3d`, `roipool3d` libraries by executing the following command:
 ```shell
+cd PointRCNN
 sh build_and_install.sh
 ```
 
