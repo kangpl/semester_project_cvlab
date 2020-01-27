@@ -14,3 +14,24 @@ data
 │   │      ├──calib & velodyne & image_2
 ```
 Here the images are only used for visualization and the [road planes](https://drive.google.com/file/d/1d5mq0RXRnvHPVeKx6Q612z0YRO1t2wAp/view?usp=sharing) are optional for ground truth augmentation in the training. 
+
+## Installation
+### Requirements
+All the codes are tested in the following environment:
+* Linux (tested on Ubuntu 14.04/16.04/18.04)
+* Python 3.6+
+* PyTorch 1.0
+
+### Install semester_project_lab 
+
+a. Clone the semester_project_lab repository.
+```shell
+git clone https://github.com/kangpl/semester_project_cvlab.git
+```
+
+b. Install the dependent python libraries like `easydict`,`tqdm`, `tensorboardX ` etc.
+
+c. Build and install the `pointnet2_lib`, `iou3d`, `roipool3d` libraries by executing the following command:
+```shell
+sh build_and_install.sh
+```
