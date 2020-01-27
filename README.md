@@ -13,4 +13,4 @@ data
 │   │   ├──testing
 │   │      ├──calib & velodyne & image_2
 ```
-Here the images are only used for visualization and the [road planes](https://drive.google.com/file/d/1d5mq0RXRnvHPVeKx6Q612z0YRO1t2wAp/view?usp=sharing) are optional for data augmentation in the training. 
+Here the images are only used for visualization and the [road planes](https://drive.google.com/file/d/1d5mq0RXRnvHPVeKx6Q612z0YRO1t2wAp/view?usp=sharing) are optional for ground truth augmentation in the training. 
