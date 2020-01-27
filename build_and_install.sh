@@ -1,4 +1,4 @@
-cd /PointRCNN/pointnet2_lib/pointnet2
+cd PointRCNN/pointnet2_lib/pointnet2
 python setup.py install
 cd ../../
 
