@@ -35,3 +35,8 @@ c. Build and install the `pointnet2_lib`, `iou3d`, `roipool3d` libraries by exec
 ```shell
 sh build_and_install.sh
 ```
+
+## PointRCNN (used as baseline)
+## PointRCNNV1 (add RGB/ add Mean and Covariance)
+## PointRCNNV2 (add image features to rpn)
+## PointRCNNV3 (add image features to rcnn)
