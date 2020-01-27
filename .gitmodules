@@ -1,0 +1,3 @@
+[submodule "PointRCNN/Pointnet2.PyTorch"]
+	path = PointRCNN/Pointnet2.PyTorch
+	url = https://github.com/sshaoshuai/Pointnet2.PyTorch.git
