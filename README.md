@@ -146,6 +146,12 @@ After comparing different ways of training the PointRCNN, we finally decided to 
 Here is the pretrained model for these four strategies [pretrained_models](https://drive.google.com/drive/folders/1G-eI33TgkPNXdTWEl7SXbkap4RN-qEyh?usp=sharing) from which I get the above results.  
 
 
-## PointRCNNV1 (add RGB/ add Mean and Covariance)
-## PointRCNNV2 (add image features to rpn)
-## PointRCNNV3 (add image features to rcnn)
+## PointRCNNV1 (add RGB/ add Mean and Covariance)  
+<img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/add_rgb.png" width="500" height="115">
+<img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/add_mean_cov.png" width="500" height="115">
+
+## PointRCNNV2 (add image features to rpn)  
+<img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/add_to_rpn.png" width="500" height="205">
+
+## PointRCNNV3 (add image features to rcnn)  
+<img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/add_to_rcnn.png" width="500" height="135">
