@@ -123,17 +123,17 @@ The differences between **with GT_AUG and RCNN online** are:
 The differences between **with GT_AUG and RCNN offline** are:
 * You don't need to run step(a)
 * The configuration file is `PointRCNN/tools/cfgs/no_gt_aug_offline_car.yaml`
-* You don't need to run step(c)1
+* You don't need to run step(c)(1)
 
 ## Evaluate
-* To evaluate a single checkpoint, run the following command with `--ckpt` to specify the checkpoint to be evaluated:
+* To evaluate a single checkpoint, run the following command with `--ckpt` to specify the checkpoint to be evaluated and `--cfgs_file` to sepecify the corresponding configuration file:
 ```
-python eval_rcnn.py --cfg_file cfgs/default.yaml --ckpt ../output/rpn/ckpt/checkpoint_epoch_200.pth --batch_size 4 --eval_mode rcnn 
+python eval_rcnn.py --cfg_file cfgs/gt_aug_online_car.yaml --ckpt ../output/rpn/gt_aug_online_car/ckpt/checkpoint_epoch_200.pth --batch_size 4 --eval_mode rpn 
 ```
 
 * To evaluate all the checkpoints of a specific training config file, add the `--eval_all` argument, and run the command as follows:
 ```
-python eval_rcnn.py --cfg_file cfgs/default.yaml --eval_mode rcnn --eval_all
+python eval_rcnn.py --cfg_file cfgs/default.yaml --eval_mode rpn --eval_all
 ```
 
 * To generate the results on the *test* split, please modify the `TEST.SPLIT=TEST` and add the `--test` argument. 
@@ -143,6 +143,7 @@ Here you could specify a bigger `--batch_size` for faster inference based on you
 ## Results
 <img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/baseline_result.png" width="400" height="115">
 After comparing different ways of training the PointRCNN, we finally decided to use the training strategy RCNN online without GT_AUG as our baseline. Since this strategy is more elegant and convenient while the performance is also acceptable. Besides, what we want to do is to compare the performance before and after adding the image information.
+Here is the pretrained model for this four strategies: [pretrained_models](https://drive.google.com/drive/folders/1G-eI33TgkPNXdTWEl7SXbkap4RN-qEyh?usp=sharing)
 
 ## PointRCNNV1 (add RGB/ add Mean and Covariance)
 ## PointRCNNV2 (add image features to rpn)
