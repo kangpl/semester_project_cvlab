@@ -157,7 +157,7 @@ python generate_bgr_mean_covariance.py --class_name Car --split train --mode TRA
 ```
 * if you want to generate rgb / mean and covariance for evaluation, you nedd to set `--split val`, `--mode EVAL`
 
-(b) Training of RPN stage
+(b) Training of RPN stage. 
 We can either add `RGB` values or add `mean and covariance` values to each points
 * To add the `RGB` values, run the following command:
 ```
@@ -166,7 +166,7 @@ python train_rcnn.py --cfg_file cfgs/use_bgr_car.yaml --batch_size 16 --train_mo
 
 * To add the `mean and covariance` values, run the following command:
 ```
-python train_rcnn.py --cfg_file cfgs/use_mean_covariance_car.yaml --batch_size 16 --train_mode rpn --epochs 200 -- rpn_mean_covariance  '../../data/KITTI/train_mean_covariance.pkl'
+python train_rcnn.py --cfg_file cfgs/use_mean_covariance_car.yaml --batch_size 16 --train_mode rpn --epochs 200 --rpn_mean_covariance  '../../data/KITTI/train_mean_covariance.pkl'
 ```
 
 * If you want to evaluate, run the following command
@@ -188,11 +188,11 @@ Suppose you have a well-trained RPN model saved at `output/rpn/use_bgr_car/ckpt/
 Train RCNN network with fixed RPN network to use online GT augmentation: Use `--rpn_ckpt` to specify the path of a well-trained RPN model and run the command as follows:
 * add `RGB` values
 ```
-python train_rcnn.py --cfg_file cfgs/use_bgr_car.yaml --batch_size 4 --train_mode rcnn --epochs 70  --ckpt_save_interval 2 --rpn_ckpt ../output/rpn/gt_aug_online_car/ckpt/checkpoint_epoch_200.pth
+python train_rcnn.py --cfg_file cfgs/use_bgr_car.yaml --batch_size 4 --train_mode rcnn --epochs 70  --ckpt_save_interval 2 --rpn_ckpt ../output/rpn/use_bgr_car/ckpt/checkpoint_epoch_200.pth --rpn_bgr '../../data/KITTI/train_bgr.pkl'
 ```
 * add `mean and covariance` values
 ```
-python train_rcnn.py --cfg_file cfgs/use_mean_covariance_car.yaml --batch_size 4 --train_mode rcnn --epochs 70  --ckpt_save_interval 2 --rpn_ckpt ../output/rpn/use_mean_covariance_car/ckpt/checkpoint_epoch_200.pth
+python train_rcnn.py --cfg_file cfgs/use_mean_covariance_car.yaml --batch_size 4 --train_mode rcnn --epochs 70  --ckpt_save_interval 2 --rpn_ckpt ../output/rpn/use_mean_covariance_car/ckpt/checkpoint_epoch_200.pth --rpn_mean_covariance  '../../data/KITTI/train_mean_covariance.pkl'
 ```
 
 * If you want to evaluate rcnn, run the following command
