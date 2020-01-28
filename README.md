@@ -143,7 +143,7 @@ Here you could specify a bigger `--batch_size` for faster inference based on you
 ## Results
 <img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/baseline_result.png" width="400" height="115">
 After comparing different ways of training the PointRCNN, we finally decided to use the training strategy RCNN online without GT_AUG as our baseline. Since this strategy is more elegant and convenient while the performance is also acceptable. Besides, what we want to do is to compare the performance before and after adding the image information.
-Here is the pretrained model for this four strategies: [pretrained_models](https://drive.google.com/drive/folders/1G-eI33TgkPNXdTWEl7SXbkap4RN-qEyh?usp=sharing)
+Here is the pretrained model for this four strategies: [pretrained_models](https://drive.google.com/drive/folders/1G-eI33TgkPNXdTWEl7SXbkap4RN-qEyh?usp=sharing) 
 
 ## PointRCNNV1 (add RGB/ add Mean and Covariance)
 ## PointRCNNV2 (add image features to rpn)
