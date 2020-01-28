@@ -1,7 +1,7 @@
 # semester_project_cvlab
 Semester project at CVLAB
 
-## Dataset preparation
+# Dataset preparation
 Please download the official [KITTI 3D object detection](http://www.cvlibs.net/datasets/kitti/eval_object.php?obj_benchmark=3d) dataset and organize the downloaded files as follows: 
 ```
 data
@@ -15,7 +15,7 @@ data
 ```
 Here the [road planes](https://drive.google.com/file/d/1d5mq0RXRnvHPVeKx6Q612z0YRO1t2wAp/view?usp=sharing) are optional for ground truth augmentation in the training. 
 
-## Installation
+# Installation
 ### Requirements
 All the codes are tested in the following environment:
 * Linux (tested on Ubuntu 18.04)
@@ -44,9 +44,9 @@ cd PointRCNN
 sh build_and_install.sh
 ```
 
-## PointRCNN (used as baseline)
+# PointRCNN (used as baseline)
 
-### Training
+## Training
 Currently, the two stages of PointRCNN are trained separately. First we clarify several terms:
 * **GT_AUG** put several new ground-truth boxes and their inside points from other scenes to the same locations of current training scene by randomly selecting non-overlapping boxes, and this augmentation is denoted as GT_AUG. 
 * **RCNN online** Train RCNN (2nd stage) network with fixed RPN (1st stage) network
@@ -57,7 +57,7 @@ So there are four train strategies:
 (3) without GT_AUG and RCNN online (we use this one as our baseline)  
 (4) without GT_AUG and RCNN offline  
 
-#### with GT_AUG and RCNN online 
+### with GT_AUG and RCNN online 
 (a) generate ground truth
 * Firstly, to use the ground truth sampling data augmentation for training, we should generate the ground truth database as follows:
 ```
@@ -87,7 +87,7 @@ Train RCNN network with fixed RPN network to use online GT augmentation: Use `--
 python train_rcnn.py --cfg_file cfgs/gt_aug_online_car.yaml --batch_size 4 --train_mode rcnn --epochs 70  --ckpt_save_interval 2 --rpn_ckpt ../output/rpn/gt_aug_online_car/ckpt/checkpoint_epoch_200.pth
 ```
 
-#### with GT_AUG and RCNN offline 
+### with GT_AUG and RCNN offline 
 Step (a)(b) is the same as `with GT_AUG and RCNN online`, except changing the configuration file to `gt_aug_offline_car`. The difference is on step(c)
 
 (c) Train RCNN network with offline GT augmentation: 
@@ -114,28 +114,21 @@ For the offline GT sampling augmentation, the default setting to train the RCNN 
 
 All the codes supported **mutiple GPUs**, simply add the `--mgpus` argument as above. And you could also increase the `--batch_size` by using multiple GPUs for training.
 
-#### without GT_AUG and RCNN online 
+### without GT_AUG and RCNN online 
 The differences between **with GT_AUG and RCNN online** are:
 * You don't need to run step(a)
 * The configuration file is `PointRCNN/tools/cfgs/no_gt_aug_online_car.yaml`
 
-#### without GT_AUG and RCNN offline 
+### without GT_AUG and RCNN offline 
 The differences between **with GT_AUG and RCNN offline** are:
 * You don't need to run step(a)
 * The configuration file is `PointRCNN/tools/cfgs/no_gt_aug_offline_car.yaml`
 * You don't need to run step(c)1
 
 
-### Pretrained model
+## Pretrained model
 <img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/baseline_result.png" width="400" height="115">
 After comparing different ways of training the PointRCNN, we finally decided to use the training strategy RCNN online without GT_AUG as our baseline. Since this strategy is more elegant and convenient while the performance is also acceptable. Besides, what we want to do is to compare the performance before and after adding the image information.
-
-
-### Quick demo
-You could run the following command to evaluate the pretrained model (set `RPN.LOC_XZ_FINE=False` since it is a little different with the default configuration): 
-```
-python eval_rcnn.py --cfg_file cfgs/default.yaml --ckpt PointRCNN.pth --batch_size 1 --eval_mode rcnn --set RPN.LOC_XZ_FINE False
-```
 
 ## Inference
 * To evaluate a single checkpoint, run the following command with `--ckpt` to specify the checkpoint to be evaluated:
