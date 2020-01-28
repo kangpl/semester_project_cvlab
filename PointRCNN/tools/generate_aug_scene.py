@@ -300,7 +300,7 @@ class AugSceneGenerator(KittiDataset):
                 if idx != len(split_list) - 1:
                     print('', file=f)
         log_print('Save split file to %s' % split_file, fp=log_fp)
-        target_dir = '../data/KITTI/ImageSets/'
+        target_dir = '../../data/KITTI/ImageSets/'
         os.system('cp %s %s' % (split_file, target_dir))
         log_print('Copy split file from %s to %s' % (split_file, target_dir), fp=log_fp)
 

@@ -23,6 +23,50 @@ For more details of PointRCNN, please refer to [our paper](https://arxiv.org/abs
 - [x] TensorboardX
 - [ ] Still in progress
 
+## Installation
+### Requirements
+All the codes are tested in the following environment:
+* Linux (tested on Ubuntu 14.04/16.04)
+* Python 3.6+
+* PyTorch 1.0
+
+### Install PointRCNN 
+
+a. Clone the PointRCNN repository.
+```shell
+git clone --recursive https://github.com/sshaoshuai/PointRCNN.git
+```
+If you forget to add the `--recursive` parameter, just run the following command to clone the `Pointnet2.PyTorch` submodule.
+```shell
+git submodule update --init --recursive
+```
+
+b. Install the dependent python libraries like `easydict`,`tqdm`, `tensorboardX ` etc.
+
+c. Build and install the `pointnet2_lib`, `iou3d`, `roipool3d` libraries by executing the following command:
+```shell
+sh build_and_install.sh
+```
+
+## Dataset preparation
+Please download the official [KITTI 3D object detection](http://www.cvlibs.net/datasets/kitti/eval_object.php?obj_benchmark=3d) dataset and organize the downloaded files as follows: 
+```
+PointRCNN
+├── data
+│   ├── KITTI
+│   │   ├── ImageSets
+│   │   ├── object
+│   │   │   ├──training
+│   │   │      ├──calib & velodyne & label_2 & image_2 & (optional: planes)
+│   │   │   ├──testing
+│   │   │      ├──calib & velodyne & image_2
+├── lib
+├── pointnet2_lib
+├── tools
+```
+Here the images are only used for visualization and the [road planes](https://drive.google.com/file/d/1d5mq0RXRnvHPVeKx6Q612z0YRO1t2wAp/view?usp=sharing) are optional for data augmentation in the training. 
+
+
 ## Pretrained model
 You could download the pretrained model(Car) of PointRCNN from [here(~15MB)](https://drive.google.com/file/d/1aapMXBkSn5c5hNTDdRNI74Ptxfny7PuC/view?usp=sharing), which is trained on the *train* split (3712 samples) and evaluated on the *val* split (3769 samples) and *test* split (7518 samples). The performance on validation set is as follows:
 ```
