@@ -15,7 +15,7 @@ np.random.seed(1024)
 parser = argparse.ArgumentParser()
 parser.add_argument('--mode', type=str, default='generator')
 parser.add_argument('--class_name', type=str, default='Car')
-parser.add_argument('--save_dir', type=str, default='./../data/KITTI/aug_scene/training')
+parser.add_argument('--save_dir', type=str, default='./../../data/KITTI/aug_scene/training')
 parser.add_argument('--split', type=str, default='train')
 parser.add_argument('--gt_database_dir', type=str, default='gt_database/train_gt_database_3level_Car.pkl')
 parser.add_argument('--include_similar', action='store_true', default=False)
@@ -315,7 +315,7 @@ if __name__ == '__main__':
         gt_database = pickle.load(open(args.gt_database_dir, 'rb'))
         log_print('Loading gt_database(%d) from %s' % (gt_database.__len__(), args.gt_database_dir), fp=log_fp)
 
-        dataset = AugSceneGenerator(root_dir='../data', gt_database=gt_database, split=args.split)
+        dataset = AugSceneGenerator(root_dir='../../data', gt_database=gt_database, split=args.split)
         dataset.generate_aug_scene(aug_times=args.aug_times, log_fp=log_fp)
 
         log_fp.close()

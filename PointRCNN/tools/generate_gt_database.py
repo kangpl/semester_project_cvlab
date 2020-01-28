@@ -92,7 +92,7 @@ class GTDatabaseGenerator(KittiDataset):
 
 
 if __name__ == '__main__':
-    dataset = GTDatabaseGenerator(root_dir='../data/', split=args.split)
+    dataset = GTDatabaseGenerator(root_dir='../../data/', split=args.split)
     os.makedirs(args.save_dir, exist_ok=True)
 
     dataset.generate_gt_database()
