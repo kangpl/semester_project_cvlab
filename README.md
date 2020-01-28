@@ -125,11 +125,6 @@ The differences between **with GT_AUG and RCNN offline** are:
 * The configuration file is `PointRCNN/tools/cfgs/no_gt_aug_offline_car.yaml`
 * You don't need to run step(c)1
 
-
-## Pretrained model
-<img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/baseline_result.png" width="400" height="115">
-After comparing different ways of training the PointRCNN, we finally decided to use the training strategy RCNN online without GT_AUG as our baseline. Since this strategy is more elegant and convenient while the performance is also acceptable. Besides, what we want to do is to compare the performance before and after adding the image information.
-
 ## Inference
 * To evaluate a single checkpoint, run the following command with `--ckpt` to specify the checkpoint to be evaluated:
 ```
@@ -145,7 +140,9 @@ python eval_rcnn.py --cfg_file cfgs/default.yaml --eval_mode rcnn --eval_all
 
 Here you could specify a bigger `--batch_size` for faster inference based on your GPU memory. Note that the `--eval_mode` argument should be consistent with the `--train_mode` used in the training process. If you are using `--eval_mode=rcnn_offline`, then you should use `--rcnn_eval_roi_dir` and `--rcnn_eval_feature_dir` to specify the saved features and proposals of the validation set. Please refer to the training section for more details. 
 
-
+## Results
+<img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/baseline_result.png" width="400" height="115">
+After comparing different ways of training the PointRCNN, we finally decided to use the training strategy RCNN online without GT_AUG as our baseline. Since this strategy is more elegant and convenient while the performance is also acceptable. Besides, what we want to do is to compare the performance before and after adding the image information.
 
 ## PointRCNNV1 (add RGB/ add Mean and Covariance)
 ## PointRCNNV2 (add image features to rpn)
