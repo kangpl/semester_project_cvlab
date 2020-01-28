@@ -150,6 +150,59 @@ Here is the pretrained model for these four strategies [pretrained_models](https
 <img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/add_rgb.png" width="500" height="115">
 <img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/add_mean_cov.png" width="500" height="115">
 
+(a) generate rgb/ mean and covariance
+* Firstly, get the corresponding `RGB` value for each point cloud using the bilinear interpolation, and get the `mean and covariance value` of a 7X7 patch for each point cloud. Here we will get two files: `train_bgr.pkl` and `train_mean_covariance.pkl` for later usage.
+```
+python generate_bgr_mean_covariance.py --class_name Car --split train --mode TRAIN
+```
+* if you want to generate rgb / mean and covariance for evaluation, you nedd to set `--split val`, `--mode EVAL`
+
+(b) Training of RPN stage
+We can either add `RGB` values or add `mean and covariance` values to each points
+* To add the `RGB` values, run the following command:
+```
+python train_rcnn.py --cfg_file cfgs/use_bgr_car.yaml --batch_size 16 --train_mode rpn --epochs 200 --rpn_bgr '../../data/KITTI/train_bgr.pkl'
+```
+
+* To add the `mean and covariance` values, run the following command:
+```
+python train_rcnn.py --cfg_file cfgs/use_mean_covariance_car.yaml --batch_size 16 --train_mode rpn --epochs 200 -- rpn_mean_covariance  '../../data/KITTI/train_mean_covariance.pkl'
+```
+
+* If you want to evaluate, run the following command
+```
+python eval_rcnn.py --cfg_file cfgs/use_bgr_car.yaml --eval_mode rpn --eval_all --batch_size 16 --rpn_bgr '../../data/KITTI/val_bgr.pkl'
+```
+```
+python eval_rcnn.py --cfg_file cfgs/use_mean_covariance_car.yaml --eval_mode rpn --eval_all --batch_size 16 --rpn_mean_covariance '../../data/KITTI/val_mean_covariance.pkl'
+```
+
+After training, the checkpoints and training logs will be saved to the corresponding directory according to the name of your configuration file. Such as for the `use_bgr_car.yaml`, you could find the checkpoints and logs in the following directory:
+```
+PointRCNNV1/output/rpn/use_bgr_car/
+```
+which will be used for the training of RCNN stage. 
+
+(c) Training of RCNN stage  
+Suppose you have a well-trained RPN model saved at `output/rpn/use_bgr_car/ckpt/checkpoint_epoch_200.pth`  
+Train RCNN network with fixed RPN network to use online GT augmentation: Use `--rpn_ckpt` to specify the path of a well-trained RPN model and run the command as follows:
+* add `RGB` values
+```
+python train_rcnn.py --cfg_file cfgs/use_bgr_car.yaml --batch_size 4 --train_mode rcnn --epochs 70  --ckpt_save_interval 2 --rpn_ckpt ../output/rpn/gt_aug_online_car/ckpt/checkpoint_epoch_200.pth
+```
+* add `mean and covariance` values
+```
+python train_rcnn.py --cfg_file cfgs/use_mean_covariance_car.yaml --batch_size 4 --train_mode rcnn --epochs 70  --ckpt_save_interval 2 --rpn_ckpt ../output/rpn/use_mean_covariance_car/ckpt/checkpoint_epoch_200.pth
+```
+
+* If you want to evaluate rcnn, run the following command
+```
+python eval_rcnn.py --cfg_file cfgs/use_bgr_car.yaml --eval_mode rcnn --eval_all --batch_size 4 --rpn_bgr '../../data/KITTI/val_bgr.pkl'
+```
+```
+python eval_rcnn.py --cfg_file cfgs/use_mean_covariance_car.yaml --eval_mode rcnn --eval_all --batch_size 4 --rpn_mean_covariance '../../data/KITTI/val_mean_covariance.pkl'
+```
+
 ## PointRCNNV2 (add image features to rpn)  
 <img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/add_to_rpn.png" width="500" height="205">
 
