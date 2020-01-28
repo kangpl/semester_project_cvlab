@@ -19,8 +19,8 @@ Here the [road planes](https://drive.google.com/file/d/1d5mq0RXRnvHPVeKx6Q612z0Y
 ### Requirements
 All the codes are tested in the following environment:
 * Linux (tested on Ubuntu 18.04)
-* Python 3.6+
-* PyTorch 1.0+
+* Python 3.7.4
+* PyTorch 1.2.0
 
 ### Install semester_project_lab 
 
@@ -31,8 +31,8 @@ git clone https://github.com/kangpl/semester_project_cvlab.git
 
 b. Install the dependent python libraries like `easydict`,`tqdm`, `tensorboardX ` etc.
 ```shell
-conda create -n myenv python=3.7
-conda install pytorch torchvision cudatoolkit=10.0 -c pytorch 
+conda create -n myenv python=3.7.4
+conda install pytorch==1.2.0 torchvision==0.4.0 cudatoolkit=10.0 -c pytorch 
 conda install scipy numba shapely
 conda install -c conda-forge easydict tqdm tensorboardx fire
 pip install scikit-image pyyaml
