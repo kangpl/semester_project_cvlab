@@ -125,7 +125,7 @@ The differences between **with GT_AUG and RCNN offline** are:
 * The configuration file is `PointRCNN/tools/cfgs/no_gt_aug_offline_car.yaml`
 * You don't need to run step(c)1
 
-## Inference
+## Evaluate
 * To evaluate a single checkpoint, run the following command with `--ckpt` to specify the checkpoint to be evaluated:
 ```
 python eval_rcnn.py --cfg_file cfgs/default.yaml --ckpt ../output/rpn/ckpt/checkpoint_epoch_200.pth --batch_size 4 --eval_mode rcnn 
