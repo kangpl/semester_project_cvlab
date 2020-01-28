@@ -88,7 +88,7 @@ python train_rcnn.py --cfg_file cfgs/gt_aug_online_car.yaml --batch_size 4 --tra
 ```
 
 #### with GT_AUG and RCNN offline 
-Step (a)(b) is the same as `with GT_AUG and RCNN online`, except change the configuration file to `gt_aug_offline_car`. The difference is on step(c)
+Step (a)(b) is the same as `with GT_AUG and RCNN online`, except changing the configuration file to `gt_aug_offline_car`. The difference is on step(c)
 
 (c) Train RCNN network with offline GT augmentation: 
 1. Generate the augmented offline scenes by running the following command:
@@ -104,23 +104,31 @@ python eval_rcnn.py --cfg_file cfgs/gt_aug_offline_car.yaml --batch_size 4 --eva
 
 * To save features and proposals for the evaluation, we keep `TEST.RPN_POST_NMS_TOP_N=100` and `TEST.RPN_NMS_THRESH=0.8` as default:
 ```
-python eval_rcnn.py --cfg_file cfgs/default.yaml --batch_size 4 --eval_mode rpn --ckpt ../output/rpn/gt_aug_offline_car/ckpt/checkpoint_epoch_200.pth --save_rpn_feature
+python eval_rcnn.py --cfg_file cfgs/gt_aug_offline_car.yaml --batch_size 4 --eval_mode rpn --ckpt ../output/rpn/gt_aug_offline_car/ckpt/checkpoint_epoch_200.pth --save_rpn_feature
 ```
 3. Now we could train our RCNN network. Note that you should modify `TRAIN.SPLIT=train_aug` to use the augmented scenes for the training, and use `--rcnn_training_roi_dir` and `--rcnn_training_feature_dir` to specify the saved features and proposals in the above step:
 ```
-python train_rcnn.py --cfg_file cfgs/default.yaml --batch_size 4 --train_mode rcnn_offline --epochs 30  --ckpt_save_interval 1 --rcnn_training_roi_dir ../output/rpn/default/eval/epoch_200/train_aug/detections/data --rcnn_training_feature_dir ../output/rpn/default/eval/epoch_200/train_aug/features
+python train_rcnn.py --cfg_file cfgs/gt_aug_offline_car.yaml --batch_size 4 --train_mode rcnn_offline --epochs 30  --ckpt_save_interval 1 --rcnn_training_roi_dir ../output/rpn/gt_aug_offline_car/eval/epoch_200/train_aug/detections/data --rcnn_training_feature_dir ../output/rpn/gt_aug_offline_car/eval/epoch_200/train_aug/features
 ```
 For the offline GT sampling augmentation, the default setting to train the RCNN network is `RCNN.ROI_SAMPLE_JIT=True`, which means that we sample the RoIs and calculate their GTs in the GPU. I also provide the CPU version proposal sampling, which is implemented in the dataloader, and you could enable this feature by setting `RCNN.ROI_SAMPLE_JIT=False`. Typically the CPU version is faster but costs more CPU resources since they use mutiple workers.  
 
 All the codes supported **mutiple GPUs**, simply add the `--mgpus` argument as above. And you could also increase the `--batch_size` by using multiple GPUs for training.
 
-#### with GT_AUG and RCNN online 
+#### without GT_AUG and RCNN online 
+The differences between **with GT_AUG and RCNN online** are:
+* You don't need to run step(a)
+* The configuration file is `PointRCNN/tools/cfgs/no_gt_aug_online_car.yaml`
 
-#### with GT_AUG and RCNN offline 
+#### without GT_AUG and RCNN offline 
+The differences between **with GT_AUG and RCNN offline** are:
+* You don't need to run step(a)
+* The configuration file is `PointRCNN/tools/cfgs/no_gt_aug_offline_car.yaml`
+* You don't need to run step(c)1
 
 
 ### Pretrained model
 <img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/baseline_result.png" width="400" height="115">
+After comparing different ways of training the PointRCNN, we finally decided to use the training strategy RCNN online without GT_AUG as our baseline. Since this strategy is more elegant and convenient while the performance is also acceptable. Besides, what we want to do is to compare the performance before and after adding the image information.
 
 
 ### Quick demo
