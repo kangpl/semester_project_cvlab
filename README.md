@@ -54,7 +54,7 @@ Currently, the two stages of PointRCNN are trained separately. First we clarify 
 So there are four train strategies:  
 (1) with GT_AUG and RCNN online  
 (2) with GT_AUG and RCNN offline  
-(3) without GT_AUG and RCNN online (we use this one as our baseline)  
+(3) without GT_AUG and RCNN online (**we use this one as our baseline**)  
 (4) without GT_AUG and RCNN offline  
 
 ### with GT_AUG and RCNN online 
