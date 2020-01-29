@@ -13,7 +13,6 @@ def model_joint_fn_decorator():
     def model_fn(model, data):
         if cfg.RPN.ENABLED:
             pts_rect, pts_features, pts_input = data['pts_rect'], data['pts_features'], data['pts_input']
-            pts_img, img = data['pts_img'], data['img']
             gt_boxes3d = data['gt_boxes3d']
 
             if not cfg.RPN.FIXED:
@@ -23,9 +22,7 @@ def model_joint_fn_decorator():
 
             inputs = torch.from_numpy(pts_input).cuda(non_blocking=True).float()
             gt_boxes3d = torch.from_numpy(gt_boxes3d).cuda(non_blocking=True).float()
-            pts_img = torch.from_numpy(pts_img).cuda(non_blocking=True).long()
-            img = torch.from_numpy(img).cuda(non_blocking=True).float()
-            input_data = {'pts_input': inputs, 'pts_img': pts_img, 'img': img, 'gt_boxes3d': gt_boxes3d}
+            input_data = {'pts_input': inputs, 'gt_boxes3d': gt_boxes3d}
         else:
             input_data = {}
             for key, val in data.items():

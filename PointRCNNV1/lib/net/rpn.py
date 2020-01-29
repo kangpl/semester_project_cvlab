@@ -19,8 +19,7 @@ class RPN(nn.Module):
 
         # classification branch
         cls_layers = []
-        # pre_channel = cfg.RPN.FP_MLPS[0][-1] 
-        pre_channel = cfg.RPN.FP_MLPS[0][-1] + 512
+        pre_channel = cfg.RPN.FP_MLPS[0][-1] 
         for k in range(0, cfg.RPN.CLS_FC.__len__()):
             cls_layers.append(pt_utils.Conv1d(pre_channel, cfg.RPN.CLS_FC[k], bn=cfg.RPN.USE_BN))
             pre_channel = cfg.RPN.CLS_FC[k]
@@ -38,8 +37,7 @@ class RPN(nn.Module):
         reg_channel += 1  # reg y
 
         reg_layers = []
-        # pre_channel = cfg.RPN.FP_MLPS[0][-1]
-        pre_channel = cfg.RPN.FP_MLPS[0][-1] + 512
+        pre_channel = cfg.RPN.FP_MLPS[0][-1]
         for k in range(0, cfg.RPN.REG_FC.__len__()):
             reg_layers.append(pt_utils.Conv1d(pre_channel, cfg.RPN.REG_FC[k], bn=cfg.RPN.USE_BN))
             pre_channel = cfg.RPN.REG_FC[k]
@@ -76,8 +74,6 @@ class RPN(nn.Module):
         pts_input = input_data['pts_input']
         backbone_xyz, backbone_features = self.backbone_net(pts_input)  # (B, N, 3), (B, C, N) # C is the number of features
 
-        # concatenate backbone_feature and img_features
-        backbone_features = torch.cat((backbone_features, input_data['img_features']), dim=1)
         rpn_cls = self.rpn_cls_layer(backbone_features).transpose(1, 2).contiguous()  # (B, N, 1)
         rpn_reg = self.rpn_reg_layer(backbone_features).transpose(1, 2).contiguous()  # (B, N, C)
 

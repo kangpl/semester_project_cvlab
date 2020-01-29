@@ -12,36 +12,34 @@ import lib.utils.roipool3d.roipool3d_utils as roipool3d_utils
 
 
 class RCNNNet(nn.Module):
-    def __init__(self, num_classes, input_channels=0, use_xyz=True): 
+    def __init__(self, num_classes, input_channels=0, use_xyz=True):
         super().__init__()
 
         self.SA_modules = nn.ModuleList()
-        channel_in = input_channels # input_channels = 128  # channels of rpn features +512 img_features
+        channel_in = input_channels
 
         if cfg.RCNN.USE_RPN_FEATURES:
             self.rcnn_input_channel = 3 + int(cfg.RCNN.USE_INTENSITY) + int(cfg.RCNN.USE_MASK) + int(cfg.RCNN.USE_DEPTH)
-            # print("this is the value of self.rcnn_input_channel: ", self.rcnn_input_channel) 5
-            self.xyz_up_layer = pt_utils.SharedMLP([self.rcnn_input_channel] + cfg.RCNN.XYZ_UP_LAYER, #[128, 128] --> change to 640
+            self.xyz_up_layer = pt_utils.SharedMLP([self.rcnn_input_channel] + cfg.RCNN.XYZ_UP_LAYER,
                                                    bn=cfg.RCNN.USE_BN)
-            c_out = cfg.RCNN.XYZ_UP_LAYER[-1] #128--> change to 640
+            c_out = cfg.RCNN.XYZ_UP_LAYER[-1]
             self.merge_down_layer = pt_utils.SharedMLP([c_out * 2, c_out], bn=cfg.RCNN.USE_BN)
 
         for k in range(cfg.RCNN.SA_CONFIG.NPOINTS.__len__()):
-            # print("k: ", k) 0,1,2
-            mlps = [channel_in] + cfg.RCNN.SA_CONFIG.MLPS[k] # mlps: [[640, 128, 128, 128], [640, 128, 128, 256], [640, 256, 256, 512]]
+            mlps = [channel_in] + cfg.RCNN.SA_CONFIG.MLPS[k]
 
-            npoint = cfg.RCNN.SA_CONFIG.NPOINTS[k] if cfg.RCNN.SA_CONFIG.NPOINTS[k] != -1 else None # NPOINTS: [128, 32, -1]
+            npoint = cfg.RCNN.SA_CONFIG.NPOINTS[k] if cfg.RCNN.SA_CONFIG.NPOINTS[k] != -1 else None
             self.SA_modules.append(
                 PointnetSAModule(
                     npoint=npoint,
-                    radius=cfg.RCNN.SA_CONFIG.RADIUS[k],  # RADIUS: [0.2, 0.4, 100]
-                    nsample=cfg.RCNN.SA_CONFIG.NSAMPLE[k], # NSAMPLE: [64, 64, 64]
+                    radius=cfg.RCNN.SA_CONFIG.RADIUS[k],
+                    nsample=cfg.RCNN.SA_CONFIG.NSAMPLE[k],
                     mlp=mlps,
                     use_xyz=use_xyz,
                     bn=cfg.RCNN.USE_BN
                 )
             )
-            channel_in = mlps[-1] # 128 or 256 or 512
+            channel_in = mlps[-1]
 
         # classification layer
         cls_channel = 1 if num_classes == 2 else num_classes

@@ -4,8 +4,6 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 import torch.nn.functional as F
-import torchvision.transforms as standard_transforms
-import lib.utils.img_transform.transforms as extended_transforms
 from lib.net.point_rcnn import PointRCNN
 from lib.datasets.kitti_rcnn_dataset import KittiRCNNDataset
 import tools.train_utils.train_utils as train_utils
@@ -141,8 +139,8 @@ def eval_one_epoch_rpn(model, dataloader, epoch_id, result_dir, logger):
     progress_bar = tqdm.tqdm(total=len(dataloader), leave=True, desc='eval')
 
     for data in dataloader:
-        sample_id_list, pts_rect, pts_features, pts_input, pts_img, img = \
-            data['sample_id'], data['pts_rect'], data['pts_features'], data['pts_input'], data['pts_img'], data['img']
+        sample_id_list, pts_rect, pts_features, pts_input = \
+            data['sample_id'], data['pts_rect'], data['pts_features'], data['pts_input']
         sample_id = sample_id_list[0]
         cnt += len(sample_id_list)
 
@@ -158,9 +156,7 @@ def eval_one_epoch_rpn(model, dataloader, epoch_id, result_dir, logger):
                 gt_boxes3d = torch.from_numpy(gt_boxes3d).cuda(non_blocking=True).float()
 
         inputs = torch.from_numpy(pts_input).cuda(non_blocking=True).float()
-        pts_img = torch.from_numpy(pts_img).cuda(non_blocking=True).long()
-        img = torch.from_numpy(img).cuda(non_blocking=True).float()
-        input_data = {'pts_input': inputs, 'pts_img': pts_img, 'img': img}
+        input_data = {'pts_input': inputs}
 
         # model inference
         ret_dict = model(input_data)
@@ -493,13 +489,11 @@ def eval_one_epoch_joint(model, dataloader, epoch_id, result_dir, logger):
     progress_bar = tqdm.tqdm(total=len(dataloader), leave=True, desc='eval')
     for data in dataloader:
         cnt += 1
-        sample_id, pts_rect, pts_features, pts_input, pts_img, img = \
-            data['sample_id'], data['pts_rect'], data['pts_features'], data['pts_input'], data['pts_img'], data['img']
+        sample_id, pts_rect, pts_features, pts_input = \
+            data['sample_id'], data['pts_rect'], data['pts_features'], data['pts_input']
         batch_size = len(sample_id)
         inputs = torch.from_numpy(pts_input).cuda(non_blocking=True).float()
-        pts_img = torch.from_numpy(pts_img).cuda(non_blocking=True).long()
-        img = torch.from_numpy(img).cuda(non_blocking=True).float()
-        input_data = {'pts_input': inputs, 'pts_img': pts_img, 'img': img}
+        input_data = {'pts_input': inputs}
 
         # model inference
         ret_dict = model(input_data)
@@ -853,20 +847,10 @@ def repeat_eval_ckpt(root_result_dir, ckpt_dir):
 
 def create_dataloader(logger):
     mode = 'TEST' if args.test else 'EVAL'
-    DATA_PATH = os.path.join('..', 'data')
+    DATA_PATH = os.path.join('../../', 'data')
 
     # create dataloader
-    mean_std = ([103.939, 116.779, 123.68], [1.0, 1.0, 1.0])
-    val_input_transform = standard_transforms.Compose([
-        extended_transforms.FlipChannels(),
-        standard_transforms.ToTensor(),
-        standard_transforms.Lambda(lambda x: x.mul_(255)),
-        standard_transforms.Normalize(*mean_std)
-    ])
-
     test_set = KittiRCNNDataset(root_dir=DATA_PATH, npoints=cfg.RPN.NUM_POINTS, 
-                                image_size=cfg.PSP.IMAGE_SIZE,
-                                transform = val_input_transform,
                                 split=cfg.TEST.SPLIT, mode=mode,
                                 random_select=args.random_select,
                                 rcnn_eval_roi_dir=args.rcnn_eval_roi_dir,

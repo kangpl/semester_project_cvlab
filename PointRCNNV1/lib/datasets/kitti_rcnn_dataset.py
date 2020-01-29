@@ -7,13 +7,12 @@ from lib.datasets.kitti_dataset import KittiDataset
 import lib.utils.kitti_utils as kitti_utils
 import lib.utils.roipool3d.roipool3d_utils as roipool3d_utils
 from lib.config import cfg
-from PIL import Image
 
 
 class KittiRCNNDataset(KittiDataset):
-    def __init__(self, root_dir, npoints=16384, image_size=(360, 1200, 3), simul_transform=None, transform=None, target_transform=None,resize_transform = None, split='train', classes='Car', mode='TRAIN', random_select=True,
+    def __init__(self, root_dir, npoints=16384, split='train', classes='Car', mode='TRAIN', random_select=True,
                  logger=None, rcnn_training_roi_dir=None, rcnn_training_feature_dir=None, rcnn_eval_roi_dir=None,
-                 rcnn_eval_feature_dir=None, gt_database_dir=None, bgr_file='../data/KITTI/train_bgr.pkl', mean_covariance_file='../data/KITTI/train_mean_covariance.pkl'):
+                 rcnn_eval_feature_dir=None, gt_database_dir=None, bgr_file='../../data/KITTI/train_bgr.pkl', mean_covariance_file='../../data/KITTI/train_mean_covariance.pkl'):
         super().__init__(root_dir=root_dir, split=split)
         if classes == 'Car':
             self.classes = ('Background', 'Car')
@@ -32,11 +31,6 @@ class KittiRCNNDataset(KittiDataset):
         self.num_class = self.classes.__len__()
 
         self.npoints = npoints
-        self.img_size = image_size
-        self.simul_transform = simul_transform
-        self.transform = transform
-        self.target_transform = target_transform
-        self.resize_transform = resize_transform
         self.sample_id_list = []
         self.random_select = random_select
         self.logger = logger
@@ -255,11 +249,8 @@ class KittiRCNNDataset(KittiDataset):
         sample_id = int(self.sample_id_list[index])
         if sample_id < 10000:
             calib = self.get_calib(sample_id)
-            # get img
-            img_file = os.path.join(self.image_dir, '%06d.png' % sample_id)
-            imgs = Image.open(img_file)
-            imgs = np.asarray(imgs, dtype = np.float32)[ : self.img_size[0], : self.img_size[1]]
-            # get lidar points
+            # img = self.get_image(sample_id)
+            img_shape = self.get_image_shape(sample_id)
             pts_lidar = self.get_lidar(sample_id)
 
             # get valid point (projected points should be in image)
@@ -267,23 +258,18 @@ class KittiRCNNDataset(KittiDataset):
             pts_intensity = pts_lidar[:, 3]
         else:
             calib = self.get_calib(sample_id % 10000)
-            img_file = os.path.join(self.image_dir, '%06d.png' % (sample_id % 10000))
-            imgs = Image.open(img_file)
-            imgs = np.asarray(imgs, dtype = np.float32)[ : self.img_size[0], : self.img_size[1]]
+            # img = self.get_image(sample_id % 10000)
+            img_shape = self.get_image_shape(sample_id % 10000)
 
             pts_file = os.path.join(self.aug_pts_dir, '%06d.bin' % sample_id)
             assert os.path.exists(pts_file), '%s' % pts_file
             aug_pts = np.fromfile(pts_file, dtype=np.float32).reshape(-1, 4)
             pts_rect, pts_intensity = aug_pts[:, 0:3], aug_pts[:, 3]
 
-        if self.transform is not None:
-            imgs = self.transform(imgs)
-
         pts_img, pts_rect_depth = calib.rect_to_img(pts_rect)
-        pts_valid_flag = self.get_valid_flag(pts_rect, pts_img, pts_rect_depth, self.img_size)
+        pts_valid_flag = self.get_valid_flag(pts_rect, pts_img, pts_rect_depth, img_shape)
 
         pts_rect = pts_rect[pts_valid_flag][:, 0:3]
-        pts_img = pts_img[pts_valid_flag]
         pts_intensity = pts_intensity[pts_valid_flag]
         pts_bgr = None
         pts_mean_covariance = None
@@ -323,22 +309,19 @@ class KittiRCNNDataset(KittiDataset):
                 np.random.shuffle(choice)
 
             ret_pts_rect = pts_rect[choice, :]
-            ret_pts_img = pts_img[choice, :]
             ret_pts_intensity = pts_intensity[choice] - 0.5  # translate intensity to [-0.5, 0.5]
-            if pts_bgr is not None:
+            if cfg.RPN.USE_BGR:
                 pts_bgr = pts_bgr[choice, :]
-            if pts_mean_covariance is not None:
+            if cfg.RPN.USE_MEAN_COVARIANCE:
                 pts_mean_covariance = pts_mean_covariance[choice, :] 
         else:
             ret_pts_rect = pts_rect
-            ret_pts_img = pts_img
             ret_pts_intensity = pts_intensity - 0.5
 
         pts_features = [ret_pts_intensity.reshape(-1, 1)]
         ret_pts_features = np.concatenate(pts_features, axis=1) if pts_features.__len__() > 1 else pts_features[0]
 
         sample_info = {'sample_id': sample_id, 'random_select': self.random_select}
-        sample_info['img'] = imgs.numpy()
 
         if self.mode == 'TEST':
             if cfg.RPN.USE_INTENSITY and cfg.RPN.USE_BGR and cfg.RPN.USE_MEAN_COVARIANCE:
@@ -359,10 +342,11 @@ class KittiRCNNDataset(KittiDataset):
                 pts_input = ret_pts_rect
             sample_info['pts_input'] = pts_input
             sample_info['pts_rect'] = ret_pts_rect
-            sample_info['pts_img'] = ret_pts_img.astype(int) # used to get the image feature of the corresponding points
             sample_info['pts_features'] = ret_pts_features
-            sample_info['pts_bgr'] = pts_bgr
-            sample_info['pts_mean_covariance'] = pts_mean_covariance
+            if cfg.RPN.USE_BGR:
+                sample_info['pts_bgr'] = pts_bgr
+            if cfg.RPN.USE_MEAN_COVARIANCE:
+                sample_info['pts_mean_covariance'] = pts_mean_covariance
             return sample_info
 
         gt_obj_list = self.filtrate_objects(self.get_label(sample_id))
@@ -403,10 +387,11 @@ class KittiRCNNDataset(KittiDataset):
         if cfg.RPN.FIXED:
             sample_info['pts_input'] = pts_input
             sample_info['pts_rect'] = aug_pts_rect
-            sample_info['pts_img'] = ret_pts_img.astype(int)
             sample_info['pts_features'] = ret_pts_features
-            sample_info['pts_bgr'] = pts_bgr
-            sample_info['pts_mean_covariance'] = pts_mean_covariance
+            if cfg.RPN.USE_BGR:
+                sample_info['pts_bgr'] = pts_bgr
+            if cfg.RPN.USE_MEAN_COVARIANCE:
+                sample_info['pts_mean_covariance'] = pts_mean_covariance
             sample_info['gt_boxes3d'] = aug_gt_boxes3d     
             return sample_info
 
@@ -414,10 +399,11 @@ class KittiRCNNDataset(KittiDataset):
         rpn_cls_label, rpn_reg_label = self.generate_rpn_training_labels(aug_pts_rect, aug_gt_boxes3d)
         sample_info['pts_input'] = pts_input
         sample_info['pts_rect'] = aug_pts_rect
-        sample_info['pts_img'] = ret_pts_img.astype(int)
         sample_info['pts_features'] = ret_pts_features
-        sample_info['pts_bgr'] = pts_bgr
-        sample_info['pts_mean_covariance'] = pts_mean_covariance
+        if cfg.RPN.USE_BGR:
+            sample_info['pts_bgr'] = pts_bgr
+        if cfg.RPN.USE_MEAN_COVARIANCE:
+            sample_info['pts_mean_covariance'] = pts_mean_covariance
         sample_info['rpn_cls_label'] = rpn_cls_label
         sample_info['rpn_reg_label'] = rpn_reg_label
         sample_info['gt_boxes3d'] = aug_gt_boxes3d

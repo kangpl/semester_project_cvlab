@@ -30,12 +30,6 @@ __C.PC_AREA_SCOPE = np.array([[-40, 40],
 
 __C.CLS_MEAN_SIZE = np.array([[1.52, 1.63, 3.88]], dtype=np.float32)
 
-# 0. config of PSP network
-__C.PSP = edict()
-__C.PSP.ENABLED = True
-__C.PSP.FIXED = True
-__C.PSP.IMAGE_SIZE = [360, 1200, 3]
-
 # 1. config of rpn network
 __C.RPN = edict()
 __C.RPN.ENABLED = True

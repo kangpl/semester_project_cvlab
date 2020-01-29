@@ -10,8 +10,6 @@ import argparse
 import logging
 from functools import partial
 
-import torchvision.transforms as standard_transforms
-import lib.utils.img_transform.transforms as extended_transforms
 from lib.net.point_rcnn import PointRCNN
 import lib.net.train_functions as train_functions
 from lib.datasets.kitti_rcnn_dataset import KittiRCNNDataset
@@ -67,21 +65,9 @@ def create_logger(log_file):
 
 
 def create_dataloader(logger):
-    DATA_PATH = os.path.join('../', 'data')
+    DATA_PATH = os.path.join('../../', 'data')
 
-    # create dataloader
-    mean_std = ([103.939, 116.779, 123.68], [1.0, 1.0, 1.0])
-    val_input_transform = standard_transforms.Compose([
-        extended_transforms.FlipChannels(),
-        standard_transforms.ToTensor(),
-        standard_transforms.Lambda(lambda x: x.mul_(255)),
-        standard_transforms.Normalize(*mean_std)
-    ])
-
-    train_set = KittiRCNNDataset(root_dir=DATA_PATH, npoints=cfg.RPN.NUM_POINTS, 
-                                 image_size=cfg.PSP.IMAGE_SIZE,
-                                 transform = val_input_transform,
-                                 split=cfg.TRAIN.SPLIT, mode='TRAIN',
+    train_set = KittiRCNNDataset(root_dir=DATA_PATH, npoints=cfg.RPN.NUM_POINTS, split=cfg.TRAIN.SPLIT, mode='TRAIN',
                                  logger=logger,
                                  classes=cfg.CLASSES,
                                  rcnn_training_roi_dir=args.rcnn_training_roi_dir,
@@ -94,10 +80,7 @@ def create_dataloader(logger):
                               drop_last=True)
 
     if args.train_with_eval:
-        test_set = KittiRCNNDataset(root_dir=DATA_PATH, npoints=cfg.RPN.NUM_POINTS, 
-                                    image_size=cfg.PSP.IMAGE_SIZE,
-                                    transform = val_input_transform,
-                                    split=cfg.TRAIN.VAL_SPLIT, mode='EVAL',
+        test_set = KittiRCNNDataset(root_dir=DATA_PATH, npoints=cfg.RPN.NUM_POINTS, split=cfg.TRAIN.VAL_SPLIT, mode='EVAL',
                                     logger=logger,
                                     classes=cfg.CLASSES,
                                     rcnn_eval_roi_dir=args.rcnn_eval_roi_dir,

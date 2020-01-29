@@ -236,7 +236,7 @@ class MeanCovGenerator(KittiDataset):
         return mean_covariance
 
 if __name__ == '__main__':
-    dataset = MeanCovGenerator(root_dir='../data/', split=args.split, mode=args.mode)
+    dataset = MeanCovGenerator(root_dir='../../data/', split=args.split, mode=args.mode)
 
     dataset.generate_mean_covariance()
 
