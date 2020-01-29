@@ -143,10 +143,10 @@ Here you could specify a bigger `--batch_size` for faster inference based on you
 ## Results
 <img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/baseline_result.png" width="400" height="115">
 After comparing different ways of training the PointRCNN, we finally decided to use the training strategy RCNN online without GT_AUG as our baseline. Since this strategy is more elegant and convenient while the performance is also acceptable. Besides, what we want to do is to compare the performance before and after adding the image information.
-Here is the pretrained model for these four strategies [pretrained_models](https://drive.google.com/drive/folders/1G-eI33TgkPNXdTWEl7SXbkap4RN-qEyh?usp=sharing) from which I get the above results.  
+Here is the pretrained model for these four strategies [pretrained models](https://drive.google.com/drive/folders/1G-eI33TgkPNXdTWEl7SXbkap4RN-qEyh?usp=sharing) from which I get the above results.  
 
 
-## PointRCNNV1 (add RGB/ add Mean and Covariance)  
+# PointRCNNV1 (add RGB/ add Mean and Covariance)  
 <img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/add_rgb.png" width="500" height="115">
 <img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/add_mean_cov.png" width="500" height="115">
 
@@ -203,8 +203,18 @@ python eval_rcnn.py --cfg_file cfgs/use_bgr_car.yaml --eval_mode rcnn --eval_all
 python eval_rcnn.py --cfg_file cfgs/use_mean_covariance_car.yaml --eval_mode rcnn --eval_all --batch_size 4 --rpn_mean_covariance '../../data/KITTI/val_mean_covariance.pkl'
 ```
 
-## PointRCNNV2 (add image features to rpn)  
+## Results
+<img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/rgb_mean_cov_result.png" width="400" height="115">.   
+Here is the pretrained models for [adding rgb](https://drive.google.com/file/d/1q7Bd0EjJ2dGf32uVjs3uLlarC4JqtWAJ/view?usp=sharing) and [adding mean and convariance](https://drive.google.com/file/d/1D5-SUQQTXgU4UxfPeoXJE94oh4q5Lzph/view?usp=sharing) from which I get the above results. You can evaluate the pretained model using the following commands:  
+```
+python eval_rcnn.py --cfg_file cfgs/use_bgr_car.yaml --ckpt ../../model/add_rgb.pth --batch_size 4 --eval_mode rcnn --rpn_bgr '../../data/KITTI/val_bgr.pkl'
+```
+```
+python eval_rcnn.py --cfg_file cfgs/use_mean_covariance_car.yaml --ckpt ../../model/add_mean_and_cov.pth --batch_size 4 --eval_mode rcnn --rpn_mean_covariance  '../../data/KITTI/val_mean_covariance.pkl'
+```
+
+# PointRCNNV2 (add image features to rpn)  
 <img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/add_to_rpn.png" width="500" height="205">
 
-## PointRCNNV3 (add image features to rcnn)  
+# PointRCNNV3 (add image features to rcnn)  
 <img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/add_to_rcnn.png" width="500" height="135">
