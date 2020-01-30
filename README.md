@@ -215,7 +215,9 @@ python eval_rcnn.py --cfg_file cfgs/use_mean_covariance_car.yaml --ckpt ../../mo
 
 # PointRCNNV2 (add image features to rpn)  
 <img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/add_to_rpn.png" width="500" height="205">
+
 Please download the finetuned PSPNet model [finetune_car.pth](https://drive.google.com/file/d/1aKYEtYVe0xv_mDGvSorlGU2f5GZy-2jL/view?usp=sharing) and organize the downloaded model as follows: 
+
 ```
 semester_project_cvlab
 ├── data 
@@ -226,19 +228,12 @@ semester_project_cvlab
 ├── PointRCNNV2 
 ├── PointRCNNV3 
 ```
-```
-data
-├── KITTI
-│   ├── ImageSets
-│   ├── object
-│   │   ├──training
-│   │      ├──calib & velodyne & label_2 & image_2 & (optional: planes)
-│   │   ├──testing
-│   │      ├──calib & velodyne & image_2
-```
+
+
 ```
 python train_rcnn.py --cfg_file cfgs/finetuned_img_features_rpn_car.yaml --batch_size 16 --train_mode rpn --epochs 200
 ```
+
 ```
 python train_rcnn.py --cfg_file cfgs/finetuned_img_features_rpn_car.yaml --batch_size 4 --train_mode rcnn --epochs 100 --ckpt_save_interval 2 --rpn_ckpt ../output/rpn/finetuned_img_features_rpn_car/ckpt/checkpoint_epoch_200.pth
 ```
