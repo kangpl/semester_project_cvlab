@@ -188,11 +188,11 @@ Suppose you have a well-trained RPN model saved at `output/rpn/use_bgr_car/ckpt/
 Train RCNN network with fixed RPN network to use online GT augmentation: Use `--rpn_ckpt` to specify the path of a well-trained RPN model and run the command as follows:
 * add `RGB` values
 ```
-python train_rcnn.py --cfg_file cfgs/use_bgr_car.yaml --batch_size 4 --train_mode rcnn --epochs 70  --ckpt_save_interval 2 --rpn_ckpt ../output/rpn/use_bgr_car/ckpt/checkpoint_epoch_200.pth --rpn_bgr '../../data/KITTI/train_bgr.pkl'
+python train_rcnn.py --cfg_file cfgs/use_bgr_car.yaml --batch_size 4 --train_mode rcnn --epochs 100  --ckpt_save_interval 2 --rpn_ckpt ../output/rpn/use_bgr_car/ckpt/checkpoint_epoch_200.pth --rpn_bgr '../../data/KITTI/train_bgr.pkl'
 ```
 * add `mean and covariance` values
 ```
-python train_rcnn.py --cfg_file cfgs/use_mean_covariance_car.yaml --batch_size 4 --train_mode rcnn --epochs 70  --ckpt_save_interval 2 --rpn_ckpt ../output/rpn/use_mean_covariance_car/ckpt/checkpoint_epoch_200.pth --rpn_mean_covariance  '../../data/KITTI/train_mean_covariance.pkl'
+python train_rcnn.py --cfg_file cfgs/use_mean_covariance_car.yaml --batch_size 4 --train_mode rcnn --epochs 100  --ckpt_save_interval 2 --rpn_ckpt ../output/rpn/use_mean_covariance_car/ckpt/checkpoint_epoch_200.pth --rpn_mean_covariance  '../../data/KITTI/train_mean_covariance.pkl'
 ```
 
 * If you want to evaluate rcnn, run the following command
@@ -215,6 +215,33 @@ python eval_rcnn.py --cfg_file cfgs/use_mean_covariance_car.yaml --ckpt ../../mo
 
 # PointRCNNV2 (add image features to rpn)  
 <img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/add_to_rpn.png" width="500" height="205">
+Please download the finetuned PSPNet model [finetune_car.pth](https://drive.google.com/file/d/1aKYEtYVe0xv_mDGvSorlGU2f5GZy-2jL/view?usp=sharing) and organize the downloaded model as follows: 
+```
+semester_project_cvlab
+├── data 
+├── model 
+│   ├── finetune_car.pth 
+├── PointRCNN 
+├── PointRCNNV1 
+├── PointRCNNV2 
+├── PointRCNNV3 
+```
+```
+data
+├── KITTI
+│   ├── ImageSets
+│   ├── object
+│   │   ├──training
+│   │      ├──calib & velodyne & label_2 & image_2 & (optional: planes)
+│   │   ├──testing
+│   │      ├──calib & velodyne & image_2
+```
+```
+python train_rcnn.py --cfg_file cfgs/finetuned_img_features_rpn_car.yaml --batch_size 16 --train_mode rpn --epochs 200
+```
+```
+python train_rcnn.py --cfg_file cfgs/finetuned_img_features_rpn_car.yaml --batch_size 4 --train_mode rcnn --epochs 100 --ckpt_save_interval 2 --rpn_ckpt ../output/rpn/finetuned_img_features_rpn_car/ckpt/checkpoint_epoch_200.pth
+```
 
 # PointRCNNV3 (add image features to rcnn)  
 <img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/add_to_rcnn.png" width="500" height="135">
