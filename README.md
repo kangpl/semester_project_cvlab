@@ -143,10 +143,10 @@ Here you could specify a bigger `--batch_size` for faster inference based on you
 ## Results
 <img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/baseline_result.png" width="400" height="115">
 After comparing different ways of training the PointRCNN, we finally decided to use the training strategy RCNN online without GT_AUG as our baseline. Since this strategy is more elegant and convenient while the performance is also acceptable. Besides, what we want to do is to compare the performance before and after adding the image information.
-Here is the pretrained model for these four strategies [pretrained_models](https://drive.google.com/drive/folders/1G-eI33TgkPNXdTWEl7SXbkap4RN-qEyh?usp=sharing) from which I get the above results.  
+Here is the pretrained model for these four strategies [pretrained models](https://drive.google.com/drive/folders/1G-eI33TgkPNXdTWEl7SXbkap4RN-qEyh?usp=sharing) from which I get the above results.  
 
 
-## PointRCNNV1 (add RGB/ add Mean and Covariance)  
+# PointRCNNV1 (add RGB/ add Mean and Covariance)  
 <img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/add_rgb.png" width="500" height="115">
 <img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/add_mean_cov.png" width="500" height="115">
 
@@ -188,11 +188,11 @@ Suppose you have a well-trained RPN model saved at `output/rpn/use_bgr_car/ckpt/
 Train RCNN network with fixed RPN network to use online GT augmentation: Use `--rpn_ckpt` to specify the path of a well-trained RPN model and run the command as follows:
 * add `RGB` values
 ```
-python train_rcnn.py --cfg_file cfgs/use_bgr_car.yaml --batch_size 4 --train_mode rcnn --epochs 70  --ckpt_save_interval 2 --rpn_ckpt ../output/rpn/use_bgr_car/ckpt/checkpoint_epoch_200.pth --rpn_bgr '../../data/KITTI/train_bgr.pkl'
+python train_rcnn.py --cfg_file cfgs/use_bgr_car.yaml --batch_size 4 --train_mode rcnn --epochs 100  --ckpt_save_interval 2 --rpn_ckpt ../output/rpn/use_bgr_car/ckpt/checkpoint_epoch_200.pth --rpn_bgr '../../data/KITTI/train_bgr.pkl'
 ```
 * add `mean and covariance` values
 ```
-python train_rcnn.py --cfg_file cfgs/use_mean_covariance_car.yaml --batch_size 4 --train_mode rcnn --epochs 70  --ckpt_save_interval 2 --rpn_ckpt ../output/rpn/use_mean_covariance_car/ckpt/checkpoint_epoch_200.pth --rpn_mean_covariance  '../../data/KITTI/train_mean_covariance.pkl'
+python train_rcnn.py --cfg_file cfgs/use_mean_covariance_car.yaml --batch_size 4 --train_mode rcnn --epochs 100  --ckpt_save_interval 2 --rpn_ckpt ../output/rpn/use_mean_covariance_car/ckpt/checkpoint_epoch_200.pth --rpn_mean_covariance  '../../data/KITTI/train_mean_covariance.pkl'
 ```
 
 * If you want to evaluate rcnn, run the following command
@@ -203,8 +203,47 @@ python eval_rcnn.py --cfg_file cfgs/use_bgr_car.yaml --eval_mode rcnn --eval_all
 python eval_rcnn.py --cfg_file cfgs/use_mean_covariance_car.yaml --eval_mode rcnn --eval_all --batch_size 4 --rpn_mean_covariance '../../data/KITTI/val_mean_covariance.pkl'
 ```
 
-## PointRCNNV2 (add image features to rpn)  
+## Results
+<img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/rgb_mean_cov_result.png" width="400" height="115">.   
+Here is the pretrained models for [adding rgb](https://drive.google.com/file/d/1q7Bd0EjJ2dGf32uVjs3uLlarC4JqtWAJ/view?usp=sharing) and [adding mean and convariance](https://drive.google.com/file/d/1D5-SUQQTXgU4UxfPeoXJE94oh4q5Lzph/view?usp=sharing) from which I get the above results. You can evaluate the pretained model using the following commands:  
+```
+python eval_rcnn.py --cfg_file cfgs/use_bgr_car.yaml --ckpt ../../model/add_rgb.pth --batch_size 4 --eval_mode rcnn --rpn_bgr '../../data/KITTI/val_bgr.pkl'
+```
+```
+python eval_rcnn.py --cfg_file cfgs/use_mean_covariance_car.yaml --ckpt ../../model/add_mean_and_cov.pth --batch_size 4 --eval_mode rcnn --rpn_mean_covariance  '../../data/KITTI/val_mean_covariance.pkl'
+```
+
+# PointRCNNV2 (add image features to rpn)  
 <img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/add_to_rpn.png" width="500" height="205">
 
-## PointRCNNV3 (add image features to rcnn)  
+* Please download the finetuned PSPNet model [finetune_car.pth](https://drive.google.com/file/d/1aKYEtYVe0xv_mDGvSorlGU2f5GZy-2jL/view?usp=sharing) and organize the downloaded model as follows: 
+
+```
+semester_project_cvlab
+├── data 
+├── model 
+│   ├── finetune_car.pth 
+├── PointRCNN 
+├── PointRCNNV1 
+├── PointRCNNV2 
+├── PointRCNNV3 
+```
+
+* Training of RPN stage. 
+```
+python train_rcnn.py --cfg_file cfgs/finetuned_img_features_rpn_car.yaml --batch_size 16 --train_mode rpn --epochs 200
+```
+* Training of RCNN stage
+```
+python train_rcnn.py --cfg_file cfgs/finetuned_img_features_rpn_car.yaml --batch_size 4 --train_mode rcnn --epochs 100 --ckpt_save_interval 2 --rpn_ckpt ../output/rpn/finetuned_img_features_rpn_car/ckpt/checkpoint_epoch_200.pth
+```
+
+## Results
+<img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/rgb_mean_cov_result.png" width="400" height="115">.   
+Here is the pretrained models for [adding rgb](https://drive.google.com/file/d/1q7Bd0EjJ2dGf32uVjs3uLlarC4JqtWAJ/view?usp=sharing) and [adding mean and convariance](https://drive.google.com/file/d/1D5-SUQQTXgU4UxfPeoXJE94oh4q5Lzph/view?usp=sharing) from which I get the above results. You can evaluate the pretained model using the following commands:  
+```
+python eval_rcnn.py --cfg_file cfgs/use_bgr_car.yaml --ckpt ../../model/add_rgb.pth --batch_size 4 --eval_mode rcnn --rpn_bgr '../../data/KITTI/val_bgr.pkl'
+```
+
+# PointRCNNV3 (add image features to rcnn)  
 <img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/add_to_rcnn.png" width="500" height="135">
