@@ -67,7 +67,7 @@ def create_logger(log_file):
 
 
 def create_dataloader(logger):
-    DATA_PATH = os.path.join('../', 'data')
+    DATA_PATH = os.path.join('../../', 'data')
 
     # create dataloader
     mean_std = ([103.939, 116.779, 123.68], [1.0, 1.0, 1.0])
