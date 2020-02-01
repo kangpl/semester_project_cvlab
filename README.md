@@ -267,4 +267,6 @@ python eval_rcnn.py --cfg_file cfgs/finetuned_img_feature_rcnn_car.yaml --ckpt .
 ```
 
 # PSPNet
-We get pretrained PSPNet on Cityscapes using this repository [PSPNet-Pytorch](https://github.com/shahabty/PSPNet-Pytorch). <br />
+* We get pretrained PSPNet on Cityscapes using this repository [PSPNet-Pytorch](https://github.com/shahabty/PSPNet-Pytorch). <br />
+
+* The pretrained model segments 19 classes, but here we only need to focus on Cars. So we finetune the last convolution layer of PSPNet use the [KITTI semantic segmentation benchmark](http://www.cvlibs.net/datasets/kitti/eval_semseg.php?benchmark=semantics2015) to segment cars from the background.
