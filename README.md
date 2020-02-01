@@ -239,10 +239,10 @@ python train_rcnn.py --cfg_file cfgs/finetuned_img_features_rpn_car.yaml --batch
 ```
 
 ## Results
-<img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/rgb_mean_cov_result.png" width="400" height="115">.   
-Here is the pretrained models for [adding rgb](https://drive.google.com/file/d/1q7Bd0EjJ2dGf32uVjs3uLlarC4JqtWAJ/view?usp=sharing) and [adding mean and convariance](https://drive.google.com/file/d/1D5-SUQQTXgU4UxfPeoXJE94oh4q5Lzph/view?usp=sharing) from which I get the above results. You can evaluate the pretained model using the following commands:  
+<img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/add_image_features_rpn_result.png" width="400" height="110">.   
+Here is the pretrained models for [adding image features to rpn](https://drive.google.com/file/d/11RmXBalEPSt410pWPsdw_zDjU_zXQB06/view?usp=sharing) from which I get the above results. You can evaluate the pretained model using the following commands:  
 ```
-python eval_rcnn.py --cfg_file cfgs/use_bgr_car.yaml --ckpt ../../model/add_rgb.pth --batch_size 4 --eval_mode rcnn --rpn_bgr '../../data/KITTI/val_bgr.pkl'
+python eval_rcnn.py --cfg_file cfgs/finetuned_img_features_rpn_car.yaml --ckpt ../../model/add_img_feature_rpn.pth --batch_size 4 --eval_mode rcnn
 ```
 
 # PointRCNNV3 (add image features to rcnn)  
