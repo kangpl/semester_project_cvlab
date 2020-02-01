@@ -6,6 +6,10 @@
 /output
 /data
 /model
+*.caffemodel
+*/datasets/kitti/test
+*/datasets/kitti/train
+/ckpt
 
 ### JupyterNotebooks ###
 # gitignore template for Jupyter Notebooks
