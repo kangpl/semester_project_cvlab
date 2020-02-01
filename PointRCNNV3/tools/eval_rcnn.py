@@ -853,7 +853,7 @@ def repeat_eval_ckpt(root_result_dir, ckpt_dir):
 
 def create_dataloader(logger):
     mode = 'TEST' if args.test else 'EVAL'
-    DATA_PATH = os.path.join('../../CVPointRCNNV2', 'data')
+    DATA_PATH = os.path.join('../../', 'data')
 
     # create dataloader
     mean_std = ([103.939, 116.779, 123.68], [1.0, 1.0, 1.0])

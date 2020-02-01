@@ -87,7 +87,7 @@ class pspnet(nn.Module):
         self.cbr_final = conv2DBatchNormRelu(4096, 128, 3, 1, 1, False)
         self.dropout = nn.Dropout2d(p=0.1, inplace=True)
         self.classification = nn.Conv2d(128, self.n_classes, 1, 1, 0)
-        self.load_state_dict(torch.load('../../CVPointRCNNV2/Caffe-PSPNet/finetune_pedestrian.pth', map_location=lambda storage, loc: storage))
+        self.load_state_dict(torch.load('../../model/finetune_car.pth', map_location=lambda storage, loc: storage))
 
     def forward(self, x):
         with torch.no_grad():
