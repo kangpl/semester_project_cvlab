@@ -239,7 +239,7 @@ python train_rcnn.py --cfg_file cfgs/finetuned_img_features_rpn_car.yaml --batch
 ```
 
 ## Results
-<img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/add_image_features_rpn_result.png" width="400" height="110">.   
+<img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/add_image_features_rpn_result.png" width="400" height="105">.   
 Here is the pretrained models for [adding image features to rpn](https://drive.google.com/file/d/11RmXBalEPSt410pWPsdw_zDjU_zXQB06/view?usp=sharing) from which I get the above results. You can evaluate the pretained model using the following commands:  
 ```
 python eval_rcnn.py --cfg_file cfgs/finetuned_img_features_rpn_car.yaml --ckpt ../../model/add_img_feature_rpn.pth --batch_size 4 --eval_mode rcnn
