@@ -247,3 +247,21 @@ python eval_rcnn.py --cfg_file cfgs/finetuned_img_features_rpn_car.yaml --ckpt .
 
 # PointRCNNV3 (add image features to rcnn)  
 <img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/add_to_rcnn.png" width="500" height="135">
+
+* Please download the finetuned PSPNet model [finetune_car.pth](https://drive.google.com/file/d/1aKYEtYVe0xv_mDGvSorlGU2f5GZy-2jL/view?usp=sharing) and organize it the same as PointRCNNV2
+
+* Training of RPN stage. 
+```
+python train_rcnn.py --cfg_file cfgs/finetuned_img_feature_rcnn_car.yaml --batch_size 16 --train_mode rpn --epochs 200
+```
+* Training of RCNN stage
+```
+python train_rcnn.py --cfg_file cfgs/finetuned_img_feature_rcnn_car.yaml --batch_size 4 --train_mode rcnn --epochs 100 --ckpt_save_interval 2 --rpn_ckpt ../output/rpn/finetuned_img_feature_rcnn_car/ckpt/checkpoint_epoch_200.pth
+```
+
+## Results
+<img src="https://github.com/kangpl/semester_project_cvlab/blob/master/images/add_image_features_rcnn_result.png" width="400" height="100">.   
+Here is the pretrained models for [adding image features to rcnn](https://drive.google.com/file/d/11f_bmNIvCgEt--3qD9g-66gCB3bdL1Eh/view?usp=sharing) from which I get the above results. You can evaluate the pretained model using the following commands:  
+```
+python eval_rcnn.py --cfg_file cfgs/finetuned_img_feature_rcnn_car.yaml --ckpt ../../model/add_img_feature_rcnn.pth --batch_size 4 --eval_mode rcnn
+```
